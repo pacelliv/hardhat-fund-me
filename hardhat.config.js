@@ -4,6 +4,7 @@ require("@nomiclabs/hardhat-etherscan")
 require("hardhat-gas-reporter")
 require("solidity-coverage")
 require("hardhat-deploy")
+require("@nomiclabs/hardhat-waffle")
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
