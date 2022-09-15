@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
 error FundMe__NotOwner();
@@ -33,13 +34,13 @@ contract FundMe {
         s_priceFeed = AggregatorV3Interface(s_priceFeedAddress);
     }
 
-    receive() external payable {
-        fund();
-    }
+    // receive() external payable {
+    //     fund();
+    // }
 
-    fallback() external payable {
-        fund();
-    }
+    // fallback() external payable {
+    //     fund();
+    // }
 
     /**
      * @notice This function fund this contract
@@ -60,7 +61,7 @@ contract FundMe {
         for (
             uint256 funderIndex = 0;
             funderIndex < s_funders.length;
-            funderIndex = funderIndex + 1
+            funderIndex++
         ) {
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
