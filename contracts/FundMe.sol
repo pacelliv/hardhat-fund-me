@@ -16,7 +16,8 @@ error FundMe__NotOwner();
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public constant MINIMUM_USD = 1 * 1e18;
+    // uint256 public constant MINIMUM_USD = 1 * 1e18;
+    uint256 public constant MINIMUM_USD = 50 * 10**18; // 50 * 10^18 -- 1 ETH = 10^18 Wei
     address[] private s_funders;
     mapping(address => uint256) private s_addressToAmountFunded;
     address private immutable i_owner;
@@ -69,9 +70,11 @@ contract FundMe {
 
         s_funders = new address[](0);
 
-        (bool callSuccess, ) = payable(msg.sender).call{
+        /* (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
-        }("");
+        }(""); */
+        
+        (bool callSuccess, ) = i_owner.call{value: address(this).balance}("");
         require(callSuccess, "call failed");
     }
 
