@@ -1,4 +1,3 @@
-require("@nomicfoundation/hardhat-toolbox")
 require("dotenv").config()
 require("@nomiclabs/hardhat-etherscan")
 require("hardhat-gas-reporter")
@@ -18,7 +17,7 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 module.exports = {
     //solidity: "0.8.9",
     solidity: {
-        compilers: [{ version: "0.8.9" }, { version: "0.6.6" }],
+        compilers: [{ version: "0.8.8" }, { version: "0.6.6" }],
     },
     defaultNetwork: "hardhat",
     networks: {
@@ -35,7 +34,7 @@ module.exports = {
         },
     },
     gasReporter: {
-        enabled: true,
+        enabled: false,
         currency: "USD",
         outputFile: "gasReport.txt",
         noColors: true,

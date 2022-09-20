@@ -7,8 +7,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
 
-    // // if chainId is X use address Y
-    // // if chainId is Z use address A
+    //if chainId is X use address a
+    //if chainId is Y use address b
 
     let ethUsdPriceFeedAddress
     if (developmentChains.includes(network.name)) {
@@ -18,25 +18,24 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     }
 
-    // what happens when we want to change chains?
-    // when going to localhost or hardhat network we want to use a mock
+    //what happens when we want to change chains?
+    // when going for localhost or hardhat network we want to use a mock
     const args = [ethUsdPriceFeedAddress]
     const fundMe = await deploy("FundMe", {
         from: deployer,
-        args: args,
+        args: args, // put price feed address
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
-
     if (
         !developmentChains.includes(network.name) &&
         process.env.ETHERSCAN_API_KEY
     ) {
         await verify(fundMe.address, args)
     }
-
-    log("FundMe Deployed!")
-    log("------------------------------------------------")
+    log(
+        "------------------------------------------------------------------------"
+    )
 }
 
 module.exports.tags = ["all", "fundme"]

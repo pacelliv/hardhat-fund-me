@@ -8,6 +8,7 @@ const {
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
+    const chainId = network.config.chainId
 
     // This mock contract should not be deploy to a testnet or to a network that actually
     // has a price feed.
@@ -21,7 +22,9 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
             args: [DECIMALS, INITIAL_ANSWER],
         })
         log("Mocks Deployed!")
-        log("------------------------------------------------")
+        log(
+            "------------------------------------------------------------------------"
+        )
     }
 }
 

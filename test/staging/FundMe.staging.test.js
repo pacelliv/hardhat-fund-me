@@ -1,6 +1,6 @@
-const { ethers, network, getNamedAccounts } = require("hardhat")
-const { developmentChains } = require("../../helper-hardhat-config")
 const { assert } = require("chai")
+const { getNamedAccounts, ethers, network } = require("hardhat")
+const { developmentChains } = require("../../helper-hardhat-config")
 
 developmentChains.includes(network.name)
     ? describe.skip
@@ -13,11 +13,18 @@ developmentChains.includes(network.name)
               fundMe = await ethers.getContract("FundMe", deployer)
           })
           it("allows people to fund and withdraw", async function () {
-              await fundMe.fund({ value: sendValue })
-              await fundMe.withdraw()
-              const endingBalance = await fundMe.provider.getBalance(
+              const fundTxResponse = await fundMe.fund({ value: sendValue })
+              await fundTxResponse.wait()
+              const withdrawTxResponse = await fundMe.withdraw()
+              await withdrawTxResponse.wait()
+
+              const endingFundMeBalance = await fundMe.provider.getBalance(
                   fundMe.address
               )
-              assert.equal(endingBalance.toString(), "0")
+              console.log(
+                  endingFundMeBalance.toString() +
+                      " should equal 0, running assert equal..."
+              )
+              assert.equal(endingFundMeBalance.toString(), "0")
           })
       })

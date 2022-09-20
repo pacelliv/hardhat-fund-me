@@ -1,5 +1,5 @@
-const { deployments, ethers, getNamedAccounts } = require("hardhat")
 const { assert, expect } = require("chai")
+const { deployments, ethers, getNamedAccounts } = require("hardhat")
 const { developmentChains } = require("../../helper-hardhat-config")
 
 !developmentChains.includes(network.name)
@@ -10,54 +10,52 @@ const { developmentChains } = require("../../helper-hardhat-config")
           let mockV3Aggregator
           const sendValue = ethers.utils.parseEther("1") // 1 ETH
           beforeEach(async function () {
-              //deploy our FundMe contract
-              deployer = (await getNamedAccounts()).deployer
+              //deploy our fundMe contract using hardhat-deploy
               await deployments.fixture(["all"])
+              deployer = (await getNamedAccounts()).deployer
               fundMe = await ethers.getContract("FundMe", deployer)
               mockV3Aggregator = await ethers.getContract(
                   "MockV3Aggregator",
                   deployer
               )
           })
-
           describe("constructor", async function () {
-              it("sets the aggregator addresses correctly", async function () {
+              it("sets the aggregator address correctly", async function () {
                   const response = await fundMe.getPriceFeed()
                   assert.equal(response, mockV3Aggregator.address)
               })
           })
 
           describe("fund", async function () {
-              it("Fails if you don't send enough ETH", async function () {
+              it("fails if you don't send enought ETH", async function () {
                   await expect(fundMe.fund()).to.be.revertedWith(
-                      "Fondos insuficientes"
+                      "You need to spend more ETH!"
                   )
               })
-              it("Update the amount funded data structure", async function () {
+              it("update the amount funded data structure", async function () {
                   await fundMe.fund({ value: sendValue })
                   const response = await fundMe.getAddressToAmountFunded(
                       deployer
                   )
                   assert.equal(response.toString(), sendValue.toString())
               })
-              it("Adds funder to array of getFunders", async function () {
+              it("add funde to the getFunder array", async function () {
                   await fundMe.fund({ value: sendValue })
                   const funder = await fundMe.getFunder(0)
                   assert.equal(funder, deployer)
               })
           })
-
           describe("withdraw", async function () {
               beforeEach(async function () {
                   await fundMe.fund({ value: sendValue })
               })
-              it("Withdraw ETH from a single funder", async function () {
+              it("can withdraw from a single funder", async function () {
                   //arrange
                   const startingFundMeBalance =
                       await fundMe.provider.getBalance(fundMe.address)
                   const startingDeployerBalance =
                       await fundMe.provider.getBalance(deployer)
-                  //act
+                  // act
                   const transactionResponse = await fundMe.withdraw()
                   const transactionReceipt = await transactionResponse.wait(1)
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
@@ -68,46 +66,17 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   )
                   const endingDeployerBalance =
                       await fundMe.provider.getBalance(deployer)
-                  //gasCost
                   //assert
                   assert.equal(endingFundMeBalance, 0)
                   assert.equal(
-                      startingFundMeBalance
-                          .add(startingDeployerBalance)
-                          .toString(),
+                      startingFundMeBalance.add(startingDeployerBalance),
                       endingDeployerBalance.add(gasCost).toString()
                   )
               })
 
-              it("Withdraw ETH from a single funder", async function () {
-                  //arrange
-                  const startingFundMeBalance =
-                      await fundMe.provider.getBalance(fundMe.address)
-                  const startingDeployerBalance =
-                      await fundMe.provider.getBalance(deployer)
-                  //act
-                  const transactionResponse = await fundMe.cheaperWithdraw()
-                  const transactionReceipt = await transactionResponse.wait(1)
-                  const { gasUsed, effectiveGasPrice } = transactionReceipt
-                  const gasCost = gasUsed.mul(effectiveGasPrice)
+              //---------------------------------------------------------------------
 
-                  const endingFundMeBalance = await fundMe.provider.getBalance(
-                      fundMe.address
-                  )
-                  const endingDeployerBalance =
-                      await fundMe.provider.getBalance(deployer)
-                  //gasCost
-                  //assert
-                  assert.equal(endingFundMeBalance, 0)
-                  assert.equal(
-                      startingFundMeBalance
-                          .add(startingDeployerBalance)
-                          .toString(),
-                      endingDeployerBalance.add(gasCost).toString()
-                  )
-              })
-
-              it("allows us to withdraw with multiple getFunders", async function () {
+              it("allows to withdraw with multiple getFunder", async function () {
                   //arrange
                   const accounts = await ethers.getSigners()
 
@@ -127,7 +96,6 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   const transactionReceipt = await transactionResponse.wait(1)
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
                   const gasCost = gasUsed.mul(effectiveGasPrice)
-
                   //assert
                   const endingFundMeBalance = await fundMe.provider.getBalance(
                       fundMe.address
@@ -143,7 +111,6 @@ const { developmentChains } = require("../../helper-hardhat-config")
                           .toString(),
                       endingDeployerBalance.add(gasCost).toString()
                   )
-
                   // make sure getFunders are reset to properly
                   await expect(fundMe.getFunder(0)).to.be.reverted
 
@@ -156,17 +123,20 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       )
                   }
               })
-              it("only allows the owner to withdraw", async function () {
+
+              //-----------------------------------------------------------------------------
+
+              it("cheaper withdraw testing...", async function () {
                   const accounts = await ethers.getSigners()
-                  const fundMeConnectedContract = await fundMe.connect(
-                      accounts[1]
+                  const attacker = accounts[1]
+                  const attackerConnectedContract = await fundMe.connect(
+                      attacker
                   )
                   await expect(
-                      fundMeConnectedContract.withdraw()
-                  ).to.be.revertedWithCustomError(fundMe, "FundMe__NotOwner")
+                      attackerConnectedContract.cheaperWithdraw()
+                  ).to.be.revertedWith("FundMe__NotOwner")
               })
-
-              it("cheaperWithdraw testing...", async function () {
+              it("allows to withdraw with multiple getFunder", async function () {
                   //arrange
                   const accounts = await ethers.getSigners()
 
@@ -182,11 +152,10 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   const startingDeployerBalance =
                       await fundMe.provider.getBalance(deployer)
                   //act
-                  const transactionResponse = await fundMe.cheaperWithdraw()
+                  const transactionResponse = await fundMe.withdraw()
                   const transactionReceipt = await transactionResponse.wait(1)
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
                   const gasCost = gasUsed.mul(effectiveGasPrice)
-
                   //assert
                   const endingFundMeBalance = await fundMe.provider.getBalance(
                       fundMe.address
@@ -202,7 +171,6 @@ const { developmentChains } = require("../../helper-hardhat-config")
                           .toString(),
                       endingDeployerBalance.add(gasCost).toString()
                   )
-
                   // make sure getFunders are reset to properly
                   await expect(fundMe.getFunder(0)).to.be.reverted
 
