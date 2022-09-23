@@ -28,7 +28,7 @@ After completing the quickstart section, run the following commands:
 ```
 yarn hardhat compile
 ```
-- Deployment: 
+- Deployment (check the deployment section): 
 ```
 yarn hardhat deploy
 ```
@@ -42,7 +42,7 @@ yarn hardhat coverage
 ```
 # Deployment to a testnet or mainnet
 
-1. Setup environment variables:
+1. Set up environment variables:
 
 You'll need to set your `RPC_URL_GOERLI` and `PRIVATE_KEY` as enviroment variables. Yo can add them to an `.env` file.
 
@@ -59,3 +59,38 @@ Go to https://goerlifaucet.com/ to get free goerliETH.
 ```
 yarn hardhat deploy --network goerli
 ```
+
+# Scripts
+
+After deploying to a tesnet or localhost, for a quicker testing of the function you can run the following scripts:
+
+```
+yarn hardhat run scripts/fund.js
+```
+or
+```
+yarn hardhat run scripts/withdraw.js
+```
+
+# Gas estimation
+
+To know how much gas will cost by running things in your contract run the command:
+```
+yarn hardhat test 
+```
+You'll see the cost report in a new file called `gasReport.txt`. The Polygon network is added for comparison, just uncomment the lines of code in the `hardhat.config.js` file or add any other network.
+
+# Estimate gas cost in USD
+
+To get a USD estimation of gas you will need a `COINMARKETCAP_API_KEY` environment variable. You can get one for free from [CoinMarketCap](https://pro.coinmarketcap.com/account).
+
+Then, uncomment the line `coinmarketcap: COINMARKETCAP_API_KEY,` in the `hardhat.config.js` to get the USD estimation. It's worth noting that everytime you run your tests it will use an API call, so it might make sense to have the variable `coinmarketcap` disabled until you need it. All you need to do to disable it is commenting the line.
+
+# Verify on Etherscan
+
+If you deploy to a tesnet or mainnet you can verify your contract if you get an API Key from [Etherscan](https://etherscan.io/login?cmd=last) and set it as `ETHERSCAN_API_KEY` in your `.env` file as seen in `.env.example`.
+
+In it's current state, if you have your API Key set, it will auto verify contracts goerli contracts.
+
+# Thanks you!
+I hope you like this repo and it ends up being useful for you.
