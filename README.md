@@ -15,7 +15,6 @@ Check the package.json to see scripts for a quicker debugging.
     - In the terminal run the command `yarn --version`, if the output looks like `x.xx.xx` that means the package was installed.
 
 ## Quickstart
-#
 
 Clone this repo, cd into the folder and run yarn to install all missing dependencies: 
 ```
@@ -25,7 +24,6 @@ yarn
 
 ```
 ## Usage
-#
 
 - Deployment: 
 ```
