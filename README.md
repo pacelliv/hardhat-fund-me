@@ -62,7 +62,7 @@ yarn hardhat deploy --network goerli
 
 # Scripts
 
-After deploying to a tesnet or localhost, for a quicker testing of the function you can run the following scripts:
+After deploying to a tesnet or local net, for a quicker testing of the functions you can run the following scripts:
 
 ```
 yarn hardhat run scripts/fund.js
@@ -74,7 +74,7 @@ yarn hardhat run scripts/withdraw.js
 
 # Gas estimation
 
-To know how much gas will cost by running things in your contract run the command:
+To know how much gas will cost running things in your contract run the command:
 ```
 yarn hardhat test 
 ```
@@ -84,7 +84,7 @@ You'll see the cost report in a new file called `gasReport.txt`. The Polygon net
 
 To get a USD estimation of gas you will need a `COINMARKETCAP_API_KEY` environment variable. You can get one for free from [CoinMarketCap](https://pro.coinmarketcap.com/account).
 
-Then, uncomment the line `coinmarketcap: COINMARKETCAP_API_KEY,` in the `hardhat.config.js` to get the USD estimation. It's worth noting that everytime you run your tests it will use an API call, so it might make sense to have the variable `coinmarketcap` disabled until you need it. All you need to do to disable it is commenting the line.
+Then, uncomment the line `coinmarketcap: COINMARKETCAP_API_KEY,` in the `hardhat.config.js` file to get the USD estimation. It's worth noting that everytime you run your tests it will use an API call, so it might make sense to have the variable `coinmarketcap` disabled until you need it. All you need to do to disable it is commenting the line.
 
 # Verify on Etherscan
 
