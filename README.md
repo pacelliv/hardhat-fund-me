@@ -6,6 +6,7 @@ Check the `package.json` file to see a list of scripts for a quicker debugging.
 
 # Getting Started #
 ## Requirements:
+To run this repo first you need to install the following packages:
 
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
     - After installing the package run in the terminal the command `git --version` and if the installation was successfull the output should look like this: `git version x.xx.x` 
@@ -23,12 +24,12 @@ cd hardhat-fund-me
 yarn
 ```
 ## Usage
-After completing the quickstart section, run the following commands:
+
 - Compile:
 ```
 yarn hardhat compile
 ```
-- Deployment (check the deployment section): 
+- Deployment: 
 ```
 yarn hardhat deploy
 ```
@@ -65,12 +66,13 @@ yarn hardhat deploy --network goerli
 After deploying to a tesnet or local net, for a quicker testing of the functions you can run the following scripts:
 
 ```
-yarn hardhat run scripts/fund.js
+yarn hardhat run scripts/fund.js --network goerli
 ```
 or
 ```
-yarn hardhat run scripts/withdraw.js
+yarn hardhat run scripts/withdraw.js --network goerli
 ```
+To run the scripts in hardhat localhost add a new terminal, run `yarn hardhat node` and replace `goerli` for `localhost`.
 
 # Gas estimation
 
