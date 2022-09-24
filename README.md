@@ -6,10 +6,10 @@ Check the `package.json` file to see a list of scripts for a quicker debugging.
 
 # Getting Started #
 ## Requirements:
-To run this repo first you need to install the following packages:
+To run this repo you need to install the following packages:
 
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-    - After installing the package run in the terminal the command `git --version` and if the installation was successfull the output should look like this: `git version x.xx.x` 
+    - After installing the package run in the terminal the command `git --version` and if the installation was successful the output should look like this: `git version x.xx.x` 
 - [Nodejs](https://nodejs.org/en/)
     - In the terminal run the command `node --version`, if the output looks like `vxx.xx.x` that means the package was installed.
 - [Yarn](https://yarnpkg.com/getting-started/install)
@@ -63,7 +63,7 @@ yarn hardhat deploy --network goerli
 
 # Scripts
 
-After deploying to a tesnet or local net, for a quicker testing of the functions you can run the following scripts:
+After deploying to a tesnet or local net, you can test the functions of the contract by running the following scripts:
 
 ```
 yarn hardhat run scripts/fund.js --network goerli
@@ -76,15 +76,17 @@ To run the scripts in hardhat localhost add a new terminal, run `yarn hardhat no
 
 # Gas estimation
 
-To know how much gas will cost running things in your contract run the command:
+To know how much gas will cost running things in your contract, first go to the `hardhat.config.js` file, change the status of the `gasReporter` from `false` to `true` and run the following command:
 ```
 yarn hardhat test 
 ```
-You'll see the cost report in a new file called `gasReport.txt`. The Polygon network is added for comparison, just uncomment the lines of code in the `hardhat.config.js` file or add any other network.
+You'll see the cost report in a new file called `gasReport.txt`. 
+
+The Polygon network is added for comparison, to see how much gas will cost deploying and running your contract in this network just uncomment the lines of code in the `hardhat.config.js` file or add any other network of your interest.
 
 # Estimate gas cost in USD
 
-To get a USD estimation of gas you will need a `COINMARKETCAP_API_KEY` environment variable. You can get one for free from [CoinMarketCap](https://pro.coinmarketcap.com/account).
+To get an USD estimation of gas you will need an API to get price of different cryptocurrencies, you can get one for free from [CoinMarketCap](https://pro.coinmarketcap.com/account) and set up this API as `COINMARKETCAP_API_KEY`, this variable aslo goes in the `.env` file.
 
 Then, uncomment the line `coinmarketcap: COINMARKETCAP_API_KEY,` in the `hardhat.config.js` file to get the USD estimation. It's worth noting that everytime you run your tests it will use an API call, so it might make sense to have the variable `coinmarketcap` disabled until you need it. All you need to do to disable it is commenting the line.
 
