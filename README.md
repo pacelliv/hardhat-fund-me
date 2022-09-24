@@ -37,7 +37,7 @@ yarn hardhat deploy
 ```
 yarn hardhat test
 ```
-Test Coverage:
+- Test Coverage:
 ```
 yarn hardhat coverage
 ```
