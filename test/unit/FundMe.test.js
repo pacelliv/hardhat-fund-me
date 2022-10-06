@@ -26,6 +26,13 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
           })
 
+          describe("constructor", async () => {
+              it("sets the deployer as the owner", async () => {
+                  const response = await fundMe.getOwner()
+                  assert.equal(response, deployer)
+              })
+          })
+
           describe("fund", async () => {
               it("fails if you don't send enought ETH", async () => {
                   await expect(fundMe.fund()).to.be.revertedWith(
@@ -53,14 +60,31 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       from: deployer,
                       to: fundMe.address,
                       gasLimit: 420000,
-                      //data: "0x90abf",
                   })
               })
-              it("funds the contract without calling fund", async () => {
+              it("invokes the receive function", async () => {
                   const currentBalance = await fundMe.provider.getBalance(
                       fundMe.address
                   )
-                  assert.equal(currentBalance.toString(), sendValue.toString())
+                  assert.equal(currentBalance, sendValue.toString())
+              })
+          })
+
+          describe("fallback", async () => {
+              beforeEach(async () => {
+                  await fundMe.signer.sendTransaction({
+                      value: sendValue,
+                      from: deployer,
+                      to: fundMe.address,
+                      gasLimit: 420000,
+                      data: "0x90abf2",
+                  })
+              })
+              it("invokes the fallback function", async () => {
+                  const currentBalance = await fundMe.provider.getBalance(
+                      fundMe.address
+                  )
+                  assert.equal(currentBalance, sendValue.toString())
               })
           })
 
@@ -93,9 +117,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   )
               })
 
-              //---------------------------------------------------------------------
-
-              it("allows to withdraw with multiple getFunder", async () => {
+              it("allows to withdraw with multiple funders", async () => {
                   //arrange
                   const accounts = await ethers.getSigners()
 
@@ -130,7 +152,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                           .toString(),
                       endingDeployerBalance.add(gasCost).toString()
                   )
-                  // make sure getFunders are reset to properly
+                  // make sure getFunders are reset properly
                   await expect(fundMe.getFunder(0)).to.be.reverted
 
                   for (i = 1; i < 6; i++) {
@@ -142,10 +164,35 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       )
                   }
               })
-
-              //-----------------------------------------------------------------------------
-
-              it("cheaper withdraw testing...", async () => {
+          })
+          describe("cheaper withdraw", async () => {
+              beforeEach(async () => {
+                  await fundMe.fund({ value: sendValue })
+              })
+              it("allows to cheaperWithdraw from a single funder", async () => {
+                  //arrange
+                  const startingFundMeBalance =
+                      await fundMe.provider.getBalance(fundMe.address)
+                  const startingDeployerBalance =
+                      await fundMe.provider.getBalance(deployer)
+                  //act
+                  const transactionResponse = await fundMe.cheaperWithdraw()
+                  const transactionReceipt = await transactionResponse.wait(1)
+                  const { gasUsed, effectiveGasPrice } = transactionReceipt
+                  const gasCost = gasUsed.mul(effectiveGasPrice)
+                  const endingFundMeBalance = await fundMe.provider.getBalance(
+                      fundMe.address
+                  )
+                  const endingDeployerBalance =
+                      await fundMe.provider.getBalance(deployer)
+                  //assert
+                  assert.equal(endingFundMeBalance, 0)
+                  assert.equal(
+                      startingFundMeBalance.add(startingDeployerBalance),
+                      endingDeployerBalance.add(gasCost).toString()
+                  )
+              })
+              it("only allows the owner to withdraw", async () => {
                   const accounts = await ethers.getSigners()
                   const attacker = accounts[1]
                   const attackerConnectedContract = await fundMe.connect(
@@ -155,52 +202,53 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       attackerConnectedContract.cheaperWithdraw()
                   ).to.be.revertedWith("FundMe__NotOwner")
               })
-              it("allows to withdraw with multiple getFunder", async () => {
-                  //arrange
-                  const accounts = await ethers.getSigners()
+          })
+          it("allows to cheaperWithdraw with multiple funders", async () => {
+              //arrange
+              const accounts = await ethers.getSigners()
 
-                  //i starts at 1 because zero is the deployer
-                  for (i = 1; i < 6; i++) {
-                      const fundMeConnectedContract = await fundMe.connect(
-                          accounts[i]
-                      )
-                      await fundMeConnectedContract.fund({ value: sendValue })
-                  }
-                  const startingFundMeBalance =
-                      await fundMe.provider.getBalance(fundMe.address)
-                  const startingDeployerBalance =
-                      await fundMe.provider.getBalance(deployer)
-                  //act
-                  const transactionResponse = await fundMe.withdraw()
-                  const transactionReceipt = await transactionResponse.wait(1)
-                  const { gasUsed, effectiveGasPrice } = transactionReceipt
-                  const gasCost = gasUsed.mul(effectiveGasPrice)
-                  //assert
-                  const endingFundMeBalance = await fundMe.provider.getBalance(
-                      fundMe.address
+              //i starts at 1 because zero is the deployer
+              for (i = 1; i < 6; i++) {
+                  const fundMeConnectedContract = await fundMe.connect(
+                      accounts[i]
                   )
-                  const endingDeployerBalance =
-                      await fundMe.provider.getBalance(deployer)
-                  //gasCost
-                  //assert
-                  assert.equal(endingFundMeBalance, 0)
+                  await fundMeConnectedContract.fund({ value: sendValue })
+              }
+              const startingFundMeBalance = await fundMe.provider.getBalance(
+                  fundMe.address
+              )
+              const startingDeployerBalance = await fundMe.provider.getBalance(
+                  deployer
+              )
+              //act
+              const transactionResponse = await fundMe.cheaperWithdraw()
+              const transactionReceipt = await transactionResponse.wait(1)
+              const { gasUsed, effectiveGasPrice } = transactionReceipt
+              const gasCost = gasUsed.mul(effectiveGasPrice)
+              //assert
+              const endingFundMeBalance = await fundMe.provider.getBalance(
+                  fundMe.address
+              )
+              const endingDeployerBalance = await fundMe.provider.getBalance(
+                  deployer
+              )
+              //gasCost
+              //assert
+              assert.equal(endingFundMeBalance, 0)
+              assert.equal(
+                  startingFundMeBalance.add(startingDeployerBalance).toString(),
+                  endingDeployerBalance.add(gasCost).toString()
+              )
+              // make sure getFunders are reset properly
+              await expect(fundMe.getFunder(0)).to.be.reverted
+
+              for (i = 1; i < 6; i++) {
                   assert.equal(
-                      startingFundMeBalance
-                          .add(startingDeployerBalance)
-                          .toString(),
-                      endingDeployerBalance.add(gasCost).toString()
+                      await fundMe.getAddressToAmountFunded(
+                          accounts[i].address
+                      ),
+                      0
                   )
-                  // make sure getFunders are reset to properly
-                  await expect(fundMe.getFunder(0)).to.be.reverted
-
-                  for (i = 1; i < 6; i++) {
-                      assert.equal(
-                          await fundMe.getAddressToAmountFunded(
-                              accounts[i].address
-                          ),
-                          0
-                      )
-                  }
-              })
+              }
           })
       })
