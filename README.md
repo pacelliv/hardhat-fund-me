@@ -96,5 +96,9 @@ If you deploy to a tesnet or mainnet you can verify your contract if you get an 
 
 In it's current state, if you have your API Key set, it will auto verify contracts goerli contracts.
 
+# Acknowledgements
+
+I want to thanks [PatrickAlphaC](https://github.com/PatrickAlphaC) for teaching me the necessary tools to complete this project in my journey to become a full stack developer.
+
 # Thanks you!
 I hope you like this repo and it ends up being useful for you.

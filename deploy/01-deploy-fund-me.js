@@ -18,7 +18,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     }
 
-    //what happens when we want to change chains?
+    // what happens when we want to change chains?
     // when going for localhost or hardhat network we want to use a mock
     const args = [ethUsdPriceFeedAddress]
     const fundMe = await deploy("FundMe", {
