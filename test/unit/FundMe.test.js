@@ -4,7 +4,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
 
 !developmentChains.includes(network.name)
     ? describe.skip
-    : describe("FundMe", async () => {
+    : describe("FundMe", () => {
           let fundMe
           let deployer
           let mockV3Aggregator
@@ -19,21 +19,21 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   deployer
               )
           })
-          describe("constructor", async () => {
+          describe("constructor", () => {
               it("sets the aggregator address correctly", async () => {
                   const response = await fundMe.getPriceFeed()
                   assert.equal(response, mockV3Aggregator.address)
               })
           })
 
-          describe("constructor", async () => {
+          describe("constructor", () => {
               it("sets the deployer as the owner", async () => {
                   const response = await fundMe.getOwner()
                   assert.equal(response, deployer)
               })
           })
 
-          describe("fund", async () => {
+          describe("fund", () => {
               it("fails if you don't send enought ETH", async () => {
                   await expect(fundMe.fund()).to.be.revertedWith(
                       "You need to spend more ETH!"
@@ -53,7 +53,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
           })
 
-          describe("receive", async () => {
+          describe("receive", () => {
               beforeEach(async () => {
                   await fundMe.signer.sendTransaction({
                       value: sendValue,
@@ -70,7 +70,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
           })
 
-          describe("fallback", async () => {
+          describe("fallback", () => {
               beforeEach(async () => {
                   await fundMe.signer.sendTransaction({
                       value: sendValue,
@@ -88,7 +88,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
           })
 
-          describe("withdraw", async () => {
+          describe("withdraw", () => {
               beforeEach(async () => {
                   await fundMe.fund({ value: sendValue })
               })
@@ -165,7 +165,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   }
               })
           })
-          describe("cheaper withdraw", async () => {
+          describe("cheaper withdraw", () => {
               beforeEach(async () => {
                   await fundMe.fund({ value: sendValue })
               })
