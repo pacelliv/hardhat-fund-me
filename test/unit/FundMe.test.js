@@ -87,9 +87,6 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       fundMe.address
                   )
                   assert.equal(currentBalance, sendValue.toString())
-                  console.log(
-                      `Funded through fallback ${currentBalance.toString()}`
-                  )
               })
           })
 
