@@ -7,10 +7,10 @@ require("@nomiclabs/hardhat-waffle")
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
-const RPC_URL_GOERLI = process.env.RPC_URL_GOERLI || "https://goerli.net/"
+const RPC_URL_GOERLI = process.env.RPC_URL_GOERLI_ALCHEMY || "https://goerli.net/"
 const RPC_URL_POLYGON =
     process.env.RPC_URL_POLYGON || "https://polygonscan.com/"
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xKey"
+const PRIVATE_KEY = process.env.PRIVATE_KEY_ACCOUNT_A || "0xKey"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 
