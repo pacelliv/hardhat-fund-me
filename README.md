@@ -4,7 +4,7 @@ Use this repo to test and deploy a crowfunding contract using the `hardhat-deplo
 
 Check the `package.json` file to see a list of scripts for a quicker debugging.
 
-# Getting Started #
+# Overview #
 ## Requirements:
 To run this repo you need to install the following packages:
 
@@ -43,9 +43,9 @@ yarn hardhat coverage
 ```
 # Deployment to a testnet or mainnet
 
-1. Set up environment variables:
+1. Setup environment variables:
 
-You'll need to set your `RPC_URL_GOERLI` and `PRIVATE_KEY` as enviroment variables. Yo can add them to an `.env` file.
+You'll need to set your `RPC_URL_GOERLI` and `PRIVATE_KEY` as enviroment variables. You can add them in an `.env` file.
 
 -  `PRIVATE_KEY`: The private key of your account (like from [Metamask](https://metamask.io/)). <b>NOTE: IT IS RECOMMENDED TO CREATE A NEW ACCOUNT FOR TESTING PURPOSES AND NEVER USE AN ACCOUNT WITH REAL FUNDS.</b>
     - You can learn how to export a private key [here](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key).
