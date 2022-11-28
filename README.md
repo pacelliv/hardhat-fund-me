@@ -4,7 +4,7 @@ Use this repo to test and deploy a crowfunding contract using the `hardhat-deplo
 
 Check the `package.json` file to see a list of scripts for a quicker debugging.
 
-# Getting Started #
+# Overview #
 ## Requirements:
 To run this repo you need to install the following packages:
 
