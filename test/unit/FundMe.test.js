@@ -55,9 +55,10 @@ const { developmentChains } = require("../../helper-hardhat-config")
 
           describe("receive", () => {
               beforeEach(async () => {
-                  await fundMe.signer.sendTransaction({
+                  const accounts = await ethers.getSigners()
+                  await accounts[0].sendTransaction({
                       value: sendValue,
-                      from: deployer,
+                      from: accounts[0].address,
                       to: fundMe.address,
                       gasLimit: 420000,
                   })
@@ -72,9 +73,10 @@ const { developmentChains } = require("../../helper-hardhat-config")
 
           describe("fallback", () => {
               beforeEach(async () => {
-                  await fundMe.signer.sendTransaction({
+                  const accounts = await ethers.getSigners()
+                  await accounts[0].sendTransaction({
                       value: sendValue,
-                      from: deployer,
+                      from: accounts[0].address,
                       to: fundMe.address,
                       gasLimit: 420000,
                       data: "0x90abf2",
@@ -85,6 +87,9 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       fundMe.address
                   )
                   assert.equal(currentBalance, sendValue.toString())
+                  console.log(
+                      `Funded through fallback ${currentBalance.toString()}`
+                  )
               })
           })
 
