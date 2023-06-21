@@ -108,5 +108,3 @@ I want to thanks [PatrickAlphaC](https://github.com/PatrickAlphaC) for teaching 
 
 # Thanks you! 🎉 🎉
 I hope you like this repo and it ends up being useful for you 👨‍💻
-
-<p align="right">(<a href="#deployment-to-a-testnet-or-mainnet">back to top</a>)</p>
